@@ -17,6 +17,7 @@
     "type": "git",
     "url": "https://github.com/tony-div/result"
   },
+  "homepage": "https://tony-div.github.io/result/",
   "keywords": [
     "rust",
     "error",
