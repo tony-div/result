@@ -1,16 +1,21 @@
 {
   "name": "result2",
   "version": "1.0.0",
-  "files": [
-    "./dist"
-  ],
   "description": "rust inspired easy, and efficient error handling in js",
-  "main": "index.js",
+  "files": ["./dist"],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsup src/index.ts --format cjs,esm --dts",
+    "prepublishOnly": "npm run build",
     "docs": "rimraf ./docs && typedoc --entryPointStrategy Expand src --out docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tony-div/result"
   },
   "keywords": [
     "rust",
