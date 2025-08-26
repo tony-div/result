@@ -6,14 +6,17 @@ import { Ok } from "./ok";
 export class Result<T, E> {
   #val: T | null = null;
   #err: E | null = null;
+  #isErr = true;
   #consumed = false;
 
   /** 
    * @protected you shouldn't call this in your code. use {@link Ok} or {@link Err} instead
    */
   protected constructor(val?: T, err?: E) {
-    if(val) 
+    if(val) {
       this.#val = val;
+      this.#isErr = false;
+    }
     if(err)
       this.#err = err;
   }
@@ -24,7 +27,7 @@ export class Result<T, E> {
    * @param errArm a function to consume the {@link Err} value
    * @returns the return of okArm if it was {@link Ok} or the return of errArm
    */
-  match<U, F>(okArm?: (okVal: NonNullable<T>) => U, errArm?: (errVal: NonNullable<E>) => F): U | F | void {
+  match<U, F>(okArm?: (okVal: NonNullable<T>) => U, errArm?: (errVal: NonNullable<E> | undefined) => F): U | F | void {
     if(okArm != undefined && this.#val) {
       return okArm(this.#val);
     }
@@ -46,7 +49,7 @@ export class Result<T, E> {
    */
   isOk(): boolean {
     this.#checkConsumed();
-    return this.#err !== null;
+    return this.#isErr == false;
   }
 
   /**
@@ -65,7 +68,7 @@ export class Result<T, E> {
    */
   isErr(): boolean {
     this.#checkConsumed();
-    return this.#err == null;
+    return this.#isErr;
   }
 
   /**
@@ -73,9 +76,9 @@ export class Result<T, E> {
    * @param fn a pure function to be applied once on the {@link Err} value
    * @returns false if {@link Result} was an {@link Ok} without executing the provided function or true if {@link Result} was {@link Err} and the provided function returns true when applied to the {@link Err} value 
    */
-  isErrAnd(fn: (errValue: Readonly<NonNullable<E>>) => boolean): boolean {
+  isErrAnd(fn: (errValue: Readonly<NonNullable<E> | undefined>) => boolean): boolean {
     this.#checkConsumed();
-    return this.#err != null && fn(this.#err);
+    return this.#isErr && fn(this.#err!);
   }
 
   /**
@@ -123,10 +126,10 @@ export class Result<T, E> {
    * @throws panics if the result was already consumed
    * @returns the {@link Result} after applying the provided function to the contained {@link Err}, leaving the {@link Ok} untouched
    */
-  mapErr<F>(fn: (errValue: NonNullable<E>) => NonNullable<F>): Result<T, F> {
+  mapErr<F>(fn: (errValue: NonNullable<E> | undefined) => NonNullable<F> | undefined): Result<T, F> {
     this.#checkConsumed();
-    if(this.#err != null) {
-      return Err(fn(this.#err))
+    if(this.#isErr) {
+      return Err(fn(this.#err!))
     }
     return this as unknown as Result<T, F>;
   }
@@ -153,8 +156,8 @@ export class Result<T, E> {
    */
   inspectErr<F>(fn: (errVal: Readonly<NonNullable<E>>) => F): Result<T, E> {
     this.#checkConsumed();
-    if(this.#err != null)
-      fn(this.#err);
+    if(this.#isErr)
+      fn(this.#err!);
     return this;
   }
 
