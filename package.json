@@ -1,15 +1,16 @@
 {
-  "name": "@moftaked/result",
-  "version": "0.0.1",
+  "name": "result2",
+  "version": "1.0.0",
   "files": [
     "./dist"
   ],
-  "description": "rust inspired errors in js",
+  "description": "rust inspired easy, and efficient error handling in js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsup src/index.ts --format cjs,esm --dts"
+    "build": "npm run clean && tsup src/index.ts --format cjs,esm --dts",
+    "docs": "rimraf ./docs && typedoc --entryPointStrategy Expand src --out docs"
   },
   "keywords": [
     "rust",
@@ -19,10 +20,11 @@
     "error-handling"
   ],
   "author": "Tony George",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "rimraf": "^6.0.1",
     "tsup": "^8.5.0",
+    "typedoc": "^0.28.11",
     "typescript": "^5.9.2"
   }
 }
