@@ -8,10 +8,12 @@ export type Ok<T extends NonNullable<unknown>> = Result<T, never>;
  * @returns an {@link Ok} which inherits {@link Result}
  */
 export function Ok<T extends NonNullable<unknown>>(val: T): Ok<T> {
-  class OkFactory extends Result<T, never> {
-    constructor(val: T) {
-      super(val);
-    }
-  }
-  return new OkFactory(val) as Ok<T>;
+	return new OkFactory(val)
 }
+
+
+	class OkFactory<T extends NonNullable<unknown>> extends Result<T, never> {
+		constructor(val: T) {
+			super(val)
+		}
+	}
