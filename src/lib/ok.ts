@@ -8,7 +8,7 @@ export type Ok<T extends NonNullable<unknown>> = Result<T, never>;
  * @returns an {@link Ok} which inherits {@link Result}
  */
 export function Ok<T extends NonNullable<unknown>>(val: T): Ok<T> {
-	return new OkFactory(val) as Ok<T>
+	return new OkFactory(val)
 }
 
 
